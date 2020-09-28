@@ -1,26 +1,65 @@
 package com.ualr.simpletasklist.model;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 public class TaskList {
 
-    // TODO 03. Define TaskList's attributes. The class will have just one attribute to store all
-    //  the tasks created by the user.
+    private Map<Integer, Task> tasks;
+    private int highestTaskId;
 
-    // TIP. We need a data structure able to dynamically grow and shrink. That's why we'll use a HashMap.
-    // where keys will be integer values and the mapped values will be a task object
+    public TaskList() {
+        this.tasks = new HashMap<>();
+        this.highestTaskId = 0;
+    }
 
-    // TODO 04. Define the class constructor and the corresponding getters and setters.
+    public Map<Integer, Task> getTasks() {
+        return tasks;
+    }
 
-    // TODO 06.03. Define a new method called "add" that, given a task description, will create a
-    //  new task and add it to the task list.
+    public void setTasks(Map<Integer, Task> tasks) {
+        this.tasks = tasks;
+    }
 
-    // TODO 06.04. Define a new "toString" method that provides a formatted string with all the tasks in the task list.
-    // Format: 1 line per task. Each line should start with the id number of the task, then a dash, and the task description right after that.
-    // If the task is marked as done, "Done" should be included at the end of the line
+    public void add(String description) {
+        tasks.put(highestTaskId, new Task(description, false));
+        highestTaskId = highestTaskId + 1;
+    }
 
-    // TODO 07.03. Define a new method called "delete" that, given a task id, will delete the
-    //  corresponding task from the task list.
+    public void delete(Integer id) {
+        tasks.remove(id);
+    }
 
-    // TODO 08.03. Define a new method called "markDone" that, given a task id, will mark the
-    //  corresponding task as done.
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry<Integer, Task> entry : tasks.entrySet()) {
+            if (!entry.getValue().isDone()) {
+                builder.append(String.format(
+                        Locale.US,
+                        "%d - %s\n",
+                        entry.getKey(),
+                        entry.getValue().getDescription()));
+            } else {
+                builder.append(String.format(
+                        Locale.US,
+                        "%d - %s %s\n",
+                        entry.getKey(),
+                        entry.getValue().getDescription(),
+                        "Done"));
+            }
+
+        }
+        return builder.toString();
+    }
+
+    public void markDone(Integer id) {
+        Task task = tasks.get(id);
+
+        if (task != null) {
+            task.setDone(true);
+        }
+    }
 
 }
